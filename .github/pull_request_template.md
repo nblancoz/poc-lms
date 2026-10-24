@@ -20,16 +20,9 @@
 
 <!-- Provide step-by-step instructions to verify and test these changes. -->
 
-1. Run database setup (if applicable):
-   ```bash
-   npm run db:setup
-   ```
-2. Start the development environment:
-   ```bash
-   npm run dev
-   ```
-3. Verification steps / expected behavior:
-   -
+1. Run `npm run db:setup` (if database changes are included)
+2. Start the environment with `npm run dev`
+3. ...
 
 ## Quality Checklist
 
