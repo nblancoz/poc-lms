@@ -9,8 +9,38 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
+  id          String       @id @default(uuid())
+  email       String       @unique
+  name        String
+  password    String
+  createdAt   DateTime     @default(now())
+  enrollments Enrollment[]
+}
+
+model Course {
+  id          String       @id @default(uuid())
+  title       String
+  description String?      @db.Text
+  createdAt   DateTime     @default(now())
+  lessons     Lesson[]
+  enrollments Enrollment[]
+}
+
+model Lesson {
+  id       String @id @default(uuid())
+  courseId String
+  title    String
+  content  String @db.Text
+  order    Int    @default(1)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model Enrollment {
+  userId    String
+  courseId  String
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@id([userId, courseId])
 }
