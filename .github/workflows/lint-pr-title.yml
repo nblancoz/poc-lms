@@ -1,0 +1,39 @@
+name: Lint PR Title
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+    branches:
+      - main
+      - develop
+
+jobs:
+  validate-pr-title:
+    name: Validate SemVer Title (PATCH, MINOR, MAJOR)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR Title Prefix
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          echo "Evaluating PR Title: '$TITLE'"
+
+          REGEX='^(\[(PATCH|MINOR|MAJOR)\](\([^)]+\))?|(PATCH|MINOR|MAJOR)(\([^)]+\))?:)\s+.+$'
+
+          if [[ "$TITLE" =~ $REGEX ]]; then
+            echo "✅ PR title follows required SemVer prefix (PATCH, MINOR, MAJOR)."
+          else
+            echo "❌ Invalid PR title format."
+            echo ""
+            echo "PR titles must start with [PATCH], [MINOR], or [MAJOR] (or PATCH:, MINOR:, MAJOR:)."
+            echo ""
+            echo "Examples:"
+            echo "  - [MINOR] add authentication and course endpoints"
+            echo "  - [PATCH] fix password verification salt"
+            echo "  - [MAJOR] update database schema to v2"
+            echo "  - MINOR(auth): add jwt login"
+            exit 1
+          fi
