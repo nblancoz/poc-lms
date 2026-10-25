@@ -1,20 +1,35 @@
-import { useEffect, useState } from 'react';
+import { AuthForm } from './components/AuthForm';
+import { Header } from './components/Header';
+import { UserProfile } from './components/UserProfile';
+import { UserSwitcher } from './components/UserSwitcher';
+import { AuthProvider, useAuth } from './context';
 
-type Status = 'loading' | 'ok' | 'error';
-
-export default function App() {
-  const [status, setStatus] = useState<Status>('loading');
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((res) => setStatus(res.ok ? 'ok' : 'error'))
-      .catch(() => setStatus('error'));
-  }, []);
+function MainApp() {
+  const { user, isLoading } = useAuth();
 
   return (
-    <main>
-      <h1>POC LMS</h1>
-      <p>API: {status}</p>
-    </main>
+    <>
+      <Header />
+      <main className="main-content">
+        <UserSwitcher />
+        {isLoading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '60px' }}>
+            <div className="spinner-md" />
+          </div>
+        ) : user ? (
+          <UserProfile />
+        ) : (
+          <AuthForm />
+        )}
+      </main>
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
   );
 }
