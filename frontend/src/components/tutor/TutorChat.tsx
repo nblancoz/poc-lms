@@ -14,21 +14,47 @@ export function TutorChat({ lessonId, lessonTitle }: TutorChatProps) {
     messages,
     isLoadingHistory,
     isSending,
+    status,
     historyError,
     sendError,
+    lastFailedMessage,
     inputMessage,
     setInputMessage,
     handleSubmit,
     handleKeyDown,
     handleSuggestionClick,
+    retryLastMessage,
+    retryLoadHistory,
   } = useTutorChat(lessonId);
 
   return (
     <div className="tutor-chat-card">
-      <TutorChatHeader lessonTitle={lessonTitle} />
+      <TutorChatHeader lessonTitle={lessonTitle} status={status} />
+      {status === 'offline' && (
+        <div className="tutor-chat-alert-container">
+          <Alert variant="warning">
+            <span>
+              Has perdido la conexión a internet. Los mensajes se reanudarán cuando vuelvas a
+              conectarte.
+            </span>
+          </Alert>
+        </div>
+      )}
       {historyError && (
-        <div style={{ padding: '12px 16px 0' }}>
-          <Alert variant="error">{historyError}</Alert>
+        <div className="tutor-chat-alert-container">
+          <Alert variant="error">
+            <div className="chat-error-row">
+              <span>{historyError}</span>
+              <button
+                type="button"
+                className="chat-recovery-btn"
+                onClick={retryLoadHistory}
+                disabled={isLoadingHistory}
+              >
+                {isLoadingHistory ? 'Reintentando...' : 'Reintentar carga'}
+              </button>
+            </div>
+          </Alert>
         </div>
       )}
       <TutorMessageList
@@ -38,8 +64,22 @@ export function TutorChat({ lessonId, lessonTitle }: TutorChatProps) {
         onSelectSuggestion={handleSuggestionClick}
       />
       {sendError && (
-        <div style={{ padding: '0 16px 8px' }}>
-          <Alert variant="error">{sendError}</Alert>
+        <div className="tutor-chat-alert-container">
+          <Alert variant="error">
+            <div className="chat-error-row">
+              <span>{sendError}</span>
+              {lastFailedMessage && (
+                <button
+                  type="button"
+                  className="chat-recovery-btn"
+                  onClick={retryLastMessage}
+                  disabled={isSending}
+                >
+                  {isSending ? 'Reintentando...' : 'Reintentar pregunta'}
+                </button>
+              )}
+            </div>
+          </Alert>
         </div>
       )}
       <TutorChatInput
@@ -47,7 +87,7 @@ export function TutorChat({ lessonId, lessonTitle }: TutorChatProps) {
         onChange={setInputMessage}
         onSubmit={handleSubmit}
         onKeyDown={handleKeyDown}
-        disabled={isSending}
+        disabled={isSending || status === 'offline'}
       />
     </div>
   );

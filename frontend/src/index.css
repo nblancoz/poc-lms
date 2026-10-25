@@ -875,6 +875,36 @@ body {
   margin: 0;
 }
 
+.tutor-status-badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.tutor-status-badge.status-ready {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.tutor-status-badge.status-thinking {
+  background: rgba(234, 179, 8, 0.1);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
+.tutor-status-badge.status-offline,
+.tutor-status-badge.status-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
 .tutor-chat-subtitle {
   font-size: 0.75rem;
   color: var(--text-muted);
@@ -884,6 +914,45 @@ body {
 .tutor-chat-subtitle em {
   font-style: normal;
   color: var(--text-secondary);
+}
+
+.tutor-chat-alert-container {
+  padding: 10px 16px 0;
+}
+
+.chat-error-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.chat-recovery-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chat-recovery-btn:hover:not(:disabled) {
+  background: var(--bg-surface-elevated);
+  border-color: var(--text-secondary);
+}
+
+.chat-recovery-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .tutor-chat-messages {
