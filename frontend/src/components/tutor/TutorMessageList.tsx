@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import type { TutorMessage } from '../../types/tutor';
 import { TutorMessageItem } from './TutorMessageItem';
 import { TutorSuggestions } from './TutorSuggestions';
@@ -25,20 +24,12 @@ export function TutorMessageList({
   onSelectSuggestion,
   suggestions = DEFAULT_SUGGESTIONS,
 }: TutorMessageListProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (!containerRef.current || isLoading) return;
-
-    requestAnimationFrame(() => {
-      if (containerRef.current) {
-        containerRef.current.scrollTop = containerRef.current.scrollHeight;
-      }
-    });
-  }, [messages, isLoading, isSending]);
-
   return (
-    <div ref={containerRef} className="tutor-chat-messages" role="log" aria-live="polite">
+    <div
+      className={`tutor-chat-messages ${messages.length > 0 ? 'has-messages' : ''}`}
+      role="log"
+      aria-live="polite"
+    >
       {isLoading ? (
         <div className="tutor-chat-loading">
           <span className="spinner-sm" />

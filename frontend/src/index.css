@@ -88,8 +88,7 @@ body {
 
 @media (max-width: 480px) {
   .header-user-email {
-    max-width: 120px;
-    font-size: 0.75rem;
+    display: none;
   }
 }
 
@@ -216,18 +215,21 @@ body {
 
 @media (max-width: 540px) {
   .content-card {
-    padding: 20px 16px;
+    padding: 16px 14px;
   }
 }
 
 .tabs-nav {
   display: flex;
+}
+
+.tabs-nav.tabs-underline {
   border-bottom: 1px solid var(--border-subtle);
   margin-bottom: 24px;
   gap: 20px;
 }
 
-.tab-btn {
+.tabs-nav.tabs-underline .tab-btn {
   background: none;
   border: none;
   padding: 8px 0;
@@ -239,15 +241,15 @@ body {
   transition: color 0.15s ease;
 }
 
-.tab-btn:hover {
+.tabs-nav.tabs-underline .tab-btn:hover {
   color: var(--text-primary);
 }
 
-.tab-btn.active {
+.tabs-nav.tabs-underline .tab-btn.active {
   color: var(--text-primary);
 }
 
-.tab-btn.active::after {
+.tabs-nav.tabs-underline .tab-btn.active::after {
   content: '';
   position: absolute;
   bottom: -1px;
@@ -255,6 +257,45 @@ body {
   right: 0;
   height: 2px;
   background: var(--text-primary);
+}
+
+.tabs-nav.tabs-segmented {
+  gap: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+.tabs-nav.tabs-segmented .tab-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+  text-align: center;
+  font-family: inherit;
+}
+
+.tabs-nav.tabs-segmented .tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tabs-nav.tabs-segmented .tab-btn.active {
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .form-field {
@@ -619,6 +660,10 @@ body {
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  box-sizing: border-box;
   font-size: 0.95rem;
   line-height: 1.7;
   color: var(--text-secondary);
@@ -689,10 +734,14 @@ body {
 }
 
 .lesson-content table {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-collapse: collapse;
   margin: 18px 0;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
 }
 
 .lesson-content th,
@@ -758,6 +807,15 @@ body {
   height: calc(100vh - 110px);
   min-height: 520px;
   align-items: stretch;
+}
+
+.lesson-mobile-tabs {
+  display: none;
+}
+
+.tutor-chat-wrapper {
+  height: 100%;
+  min-height: 0;
 }
 
 .tutor-chat-card {
@@ -839,6 +897,10 @@ body {
   flex-direction: column;
   gap: 16px;
   background: var(--bg-page);
+}
+
+.tutor-chat-messages.has-messages {
+  flex-direction: column-reverse;
 }
 
 .tutor-chat-loading {
@@ -1125,29 +1187,68 @@ body {
 }
 
 @media (max-width: 960px) {
+  .lesson-mobile-tabs {
+    display: block;
+    width: 100%;
+  }
+
+  .mobile-hidden {
+    display: none !important;
+  }
+
   .lesson-viewer-container {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     height: auto;
     min-height: 0;
-    gap: 20px;
+    gap: 16px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .lesson-view {
     height: auto;
     overflow: visible;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .lesson-content {
     overflow-y: visible;
     max-height: none;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .tutor-chat-wrapper {
+    width: 100%;
+    max-width: 100%;
   }
 
   .tutor-chat-card {
-    height: auto;
-    min-height: 0;
+    height: calc(100dvh - 170px);
+    height: calc(100vh - 170px);
+    min-height: 440px;
+    max-height: calc(100vh - 140px);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .tutor-chat-messages {
-    max-height: 420px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 540px) {
+  .lesson-content {
+    padding: 16px 12px;
   }
 }

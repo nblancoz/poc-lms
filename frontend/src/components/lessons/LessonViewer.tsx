@@ -1,12 +1,13 @@
-import { ArrowLeftIcon } from '@heroicons/react/20/solid';
+import { useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useLessonViewer } from '../../hooks/useLessonViewer';
 import { TutorChat } from '../tutor/TutorChat';
 import { Alert } from '../ui/Alert';
+import { BackButton } from '../ui/BackButton';
 import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
+import { Tabs, type TabItem } from '../ui/Tabs';
 import { LessonAccessDenied } from './LessonAccessDenied';
 
 export interface LessonViewerProps {
@@ -16,6 +17,13 @@ export interface LessonViewerProps {
   isEnrolling?: boolean | undefined;
 }
 
+type MobileLessonTab = 'lesson' | 'chat';
+
+const LESSON_MOBILE_TABS: Array<TabItem<MobileLessonTab>> = [
+  { key: 'lesson', label: 'Lección' },
+  { key: 'chat', label: 'Tutor IA' },
+];
+
 export function LessonViewer({
   lessonId,
   onBack,
@@ -23,6 +31,7 @@ export function LessonViewer({
   isEnrolling = false,
 }: LessonViewerProps) {
   const { state, handleEnroll } = useLessonViewer(lessonId, onEnroll);
+  const [mobileTab, setMobileTab] = useState<MobileLessonTab>('lesson');
 
   switch (state.status) {
     case 'loading':
@@ -39,21 +48,24 @@ export function LessonViewer({
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <Alert variant="error">{state.message}</Alert>
-          <Button variant="outline" size="sm" onClick={onBack} style={{ alignSelf: 'flex-start' }}>
-            <ArrowLeftIcon style={{ width: 14, height: 14 }} aria-hidden="true" />
-            Volver al temario
-          </Button>
+          <BackButton onClick={onBack} style={{ alignSelf: 'flex-start' }} />
         </div>
       );
     case 'ready':
       return (
         <div className="lesson-viewer-container">
-          <Card className="lesson-view">
+          <div className="lesson-mobile-tabs">
+            <Tabs
+              variant="segmented"
+              items={LESSON_MOBILE_TABS}
+              activeTab={mobileTab}
+              onChange={setMobileTab}
+              aria-label="Vista en móvil"
+            />
+          </div>
+          <Card className={`lesson-view ${mobileTab !== 'lesson' ? 'mobile-hidden' : ''}`}>
             <div className="lesson-view-nav">
-              <Button variant="outline" size="sm" onClick={onBack}>
-                <ArrowLeftIcon style={{ width: 14, height: 14 }} aria-hidden="true" />
-                Volver al temario
-              </Button>
+              <BackButton onClick={onBack} />
               <Badge variant="enrolled">Lección {state.lesson.order}</Badge>
             </div>
             <div>
@@ -65,7 +77,9 @@ export function LessonViewer({
               <Markdown remarkPlugins={[remarkGfm]}>{state.lesson.content}</Markdown>
             </div>
           </Card>
-          <TutorChat lessonId={state.lesson.id} lessonTitle={state.lesson.title} />
+          <div className={`tutor-chat-wrapper ${mobileTab !== 'chat' ? 'mobile-hidden' : ''}`}>
+            <TutorChat lessonId={state.lesson.id} lessonTitle={state.lesson.title} />
+          </div>
         </div>
       );
   }

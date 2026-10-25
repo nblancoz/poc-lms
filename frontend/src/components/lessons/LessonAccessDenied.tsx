@@ -1,3 +1,4 @@
+import { BackButton } from '../ui/BackButton';
 import { Button } from '../ui/Button';
 
 export interface LessonAccessDeniedProps {
@@ -20,9 +21,7 @@ export function LessonAccessDenied({
       </p>
 
       <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
-        <Button variant="outline" size="sm" onClick={onBack}>
-          Volver al temario
-        </Button>
+        <BackButton onClick={onBack} />
         {onEnroll && (
           <Button variant="solid" size="sm" onClick={onEnroll} isLoading={isEnrolling}>
             Matricularme ahora
