@@ -48,9 +48,9 @@ export class MockAiProvider implements AiProvider {
     }
 
     if (question.includes('hola') || question.includes('buenos') || question.includes('saludos')) {
-      return `¡Hola! Soy tu tutor para la lección "${context.lessonTitle}". ¿En qué concepto o duda de esta lección te gustaría que profundicemos?`;
+      return `¡Hola! Qué gusto saludarte. Estoy aquí para acompañarte con la lección "${context.lessonTitle}". Cuéntame, ¿qué duda tienes o qué parte te gustaría repasar primero?`;
     }
 
-    return `Excelente pregunta sobre "${context.lessonTitle}". Según el contenido de esta lección, los aspectos clave a tener en cuenta son la correcta estructuración y aplicación de los principios explicados en el temario. ¿Te gustaría ver un ejemplo práctico de este punto?`;
+    return `¡Buena pregunta! En esta lección sobre "${context.lessonTitle}", el punto principal es entender cómo conectar las ideas de forma práctica y sin complicaciones. ¿Quieres que veamos juntos un ejemplo sencillo paso a paso para que te quede súper claro?`;
   }
 }
