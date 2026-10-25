@@ -25,6 +25,14 @@ export function TutorChat({ lessonId, lessonTitle }: TutorChatProps) {
     handleSuggestionClick,
     retryLastMessage,
     retryLoadHistory,
+    isListening,
+    isSpeechSupported,
+    speechError,
+    handleToggleListening,
+    retrySpeech,
+    isTtsSupported,
+    speakingMessageId,
+    toggleSpeech,
   } = useTutorChat(lessonId);
 
   return (
@@ -37,6 +45,18 @@ export function TutorChat({ lessonId, lessonTitle }: TutorChatProps) {
               Has perdido la conexión a internet. Los mensajes se reanudarán cuando vuelvas a
               conectarte.
             </span>
+          </Alert>
+        </div>
+      )}
+      {speechError && (
+        <div className="tutor-chat-alert-container">
+          <Alert variant="warning">
+            <div className="chat-error-row">
+              <span>{speechError}</span>
+              <button type="button" className="chat-recovery-btn" onClick={retrySpeech}>
+                Reintentar micrófono
+              </button>
+            </div>
           </Alert>
         </div>
       )}
@@ -62,6 +82,9 @@ export function TutorChat({ lessonId, lessonTitle }: TutorChatProps) {
         isLoading={isLoadingHistory}
         isSending={isSending}
         onSelectSuggestion={handleSuggestionClick}
+        speakingMessageId={speakingMessageId}
+        onToggleSpeak={toggleSpeech}
+        isTtsSupported={isTtsSupported}
       />
       {sendError && (
         <div className="tutor-chat-alert-container">
@@ -88,6 +111,9 @@ export function TutorChat({ lessonId, lessonTitle }: TutorChatProps) {
         onSubmit={handleSubmit}
         onKeyDown={handleKeyDown}
         disabled={isSending || status === 'offline'}
+        isListening={isListening}
+        isSpeechSupported={isSpeechSupported}
+        onToggleListening={handleToggleListening}
       />
     </div>
   );

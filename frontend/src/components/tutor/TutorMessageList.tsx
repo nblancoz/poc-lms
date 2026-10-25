@@ -8,7 +8,10 @@ export interface TutorMessageListProps {
   isLoading: boolean;
   isSending: boolean;
   onSelectSuggestion: (suggestion: string) => void;
-  suggestions?: string[];
+  suggestions?: string[] | undefined;
+  speakingMessageId?: string | null | undefined;
+  onToggleSpeak?: ((messageId: string, content: string) => void) | undefined;
+  isTtsSupported?: boolean | undefined;
 }
 
 const DEFAULT_SUGGESTIONS = [
@@ -23,6 +26,9 @@ export function TutorMessageList({
   isSending,
   onSelectSuggestion,
   suggestions = DEFAULT_SUGGESTIONS,
+  speakingMessageId,
+  onToggleSpeak,
+  isTtsSupported,
 }: TutorMessageListProps) {
   return (
     <div
@@ -44,7 +50,13 @@ export function TutorMessageList({
       ) : (
         <div className="tutor-messages-list">
           {messages.map((msg: TutorMessage) => (
-            <TutorMessageItem key={msg.id} message={msg} />
+            <TutorMessageItem
+              key={msg.id}
+              message={msg}
+              isSpeaking={speakingMessageId === msg.id}
+              onToggleSpeak={onToggleSpeak}
+              isTtsSupported={isTtsSupported}
+            />
           ))}
           {isSending && <TutorTypingIndicator />}
         </div>

@@ -10,6 +10,12 @@ export interface TutorChatHeaderProps {
 export function TutorChatHeader({ lessonTitle, status }: TutorChatHeaderProps) {
   const renderStatusBadge = () => {
     switch (status) {
+      case 'listening':
+        return (
+          <span className="tutor-status-badge status-listening" role="status">
+            <StatusDot variant="danger" /> Escuchando...
+          </span>
+        );
       case 'thinking':
         return (
           <span className="tutor-status-badge status-thinking" role="status">

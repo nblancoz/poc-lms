@@ -1,6 +1,8 @@
 import { type KeyboardEvent, type SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { fetchTutorChatHistory, sendTutorChatMessage } from '../api/tutor';
 import type { TutorInteractionStatus, TutorMessage } from '../types/tutor';
+import { useSpeechRecognition } from './useSpeechRecognition';
+import { useSpeechSynthesis } from './useSpeechSynthesis';
 
 export interface UseTutorChatResult {
   messages: TutorMessage[];
@@ -19,6 +21,14 @@ export interface UseTutorChatResult {
   retryLastMessage: () => void;
   retryLoadHistory: () => void;
   clearErrors: () => void;
+  isListening: boolean;
+  isSpeechSupported: boolean;
+  speechError: string | null;
+  handleToggleListening: () => void;
+  retrySpeech: () => void;
+  isTtsSupported: boolean;
+  speakingMessageId: string | null;
+  toggleSpeech: (messageId: string, text: string) => void;
 }
 
 export function useTutorChat(lessonId: string): UseTutorChatResult {
@@ -32,6 +42,51 @@ export function useTutorChat(lessonId: string): UseTutorChatResult {
   const [isOnline, setIsOnline] = useState<boolean>(() =>
     typeof navigator !== 'undefined' ? navigator.onLine : true,
   );
+
+  const {
+    isListening,
+    isSupported: isSpeechSupported,
+    errorMessage: speechError,
+    startListening,
+    stopListening,
+    clearError: clearSpeechError,
+  } = useSpeechRecognition({
+    onTranscript: useCallback((transcript: string) => {
+      setInputMessage(transcript);
+    }, []),
+  });
+
+  const {
+    isSupported: isTtsSupported,
+    speakingMessageId,
+    toggle: toggleSpeech,
+    stop: stopSpeech,
+  } = useSpeechSynthesis();
+
+  const handleToggleListening = useCallback(() => {
+    if (isListening) {
+      stopListening();
+    } else {
+      stopSpeech();
+      startListening();
+    }
+  }, [isListening, startListening, stopListening, stopSpeech]);
+
+  const handleToggleSpeech = useCallback(
+    (messageId: string, text: string) => {
+      if (isListening) {
+        stopListening();
+      }
+      toggleSpeech(messageId, text);
+    },
+    [isListening, stopListening, toggleSpeech],
+  );
+
+  const retrySpeech = useCallback(() => {
+    clearSpeechError();
+    stopSpeech();
+    startListening();
+  }, [clearSpeechError, startListening, stopSpeech]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -139,6 +194,10 @@ export function useTutorChat(lessonId: string): UseTutorChatResult {
 
   const handleSend = useCallback(
     async (textToSend?: string) => {
+      if (isListening) {
+        stopListening();
+      }
+
       const text = (textToSend ?? inputMessage).trim();
       if (!text || isSending) return;
 
@@ -151,7 +210,7 @@ export function useTutorChat(lessonId: string): UseTutorChatResult {
         setInputMessage(text);
       }
     },
-    [inputMessage, isSending, sendMessage],
+    [inputMessage, isListening, isSending, sendMessage, stopListening],
   );
 
   const retryLastMessage = useCallback(() => {
@@ -196,15 +255,18 @@ export function useTutorChat(lessonId: string): UseTutorChatResult {
     setHistoryError(null);
     setSendError(null);
     setLastFailedMessage(null);
-  }, []);
+    clearSpeechError();
+  }, [clearSpeechError]);
 
-  const status: TutorInteractionStatus = !isOnline
-    ? 'offline'
-    : isSending
-      ? 'thinking'
-      : historyError || sendError
-        ? 'error'
-        : 'ready';
+  const status: TutorInteractionStatus = isListening
+    ? 'listening'
+    : !isOnline
+      ? 'offline'
+      : isSending
+        ? 'thinking'
+        : historyError || sendError
+          ? 'error'
+          : 'ready';
 
   return {
     messages,
@@ -223,5 +285,13 @@ export function useTutorChat(lessonId: string): UseTutorChatResult {
     retryLastMessage,
     retryLoadHistory,
     clearErrors,
+    isListening,
+    isSpeechSupported,
+    speechError,
+    handleToggleListening,
+    retrySpeech,
+    isTtsSupported,
+    speakingMessageId,
+    toggleSpeech: handleToggleSpeech,
   };
 }

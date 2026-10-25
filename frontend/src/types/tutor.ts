@@ -1,5 +1,5 @@
 export type TutorMessageRole = 'user' | 'assistant';
-export type TutorInteractionStatus = 'ready' | 'thinking' | 'offline' | 'error';
+export type TutorInteractionStatus = 'ready' | 'thinking' | 'offline' | 'error' | 'listening';
 
 export interface TutorMessage {
   id: string;
