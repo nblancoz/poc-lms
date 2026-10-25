@@ -1,12 +1,4 @@
-import {
-  type KeyboardEvent,
-  type RefObject,
-  type SyntheticEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { type KeyboardEvent, type SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { fetchTutorChatHistory, sendTutorChatMessage } from '../api/tutor';
 import type { TutorMessage } from '../types/tutor';
 
@@ -18,7 +10,6 @@ export interface UseTutorChatResult {
   sendError: string | null;
   inputMessage: string;
   setInputMessage: (value: string) => void;
-  messagesEndRef: RefObject<HTMLDivElement | null>;
   handleSubmit: (e: SyntheticEvent<HTMLFormElement>) => void;
   handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
   handleSuggestionClick: (suggestion: string) => void;
@@ -32,8 +23,6 @@ export function useTutorChat(lessonId: string): UseTutorChatResult {
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [sendError, setSendError] = useState<string | null>(null);
   const [inputMessage, setInputMessage] = useState<string>('');
-
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const loadHistory = useCallback(async () => {
     if (!lessonId) return;
@@ -66,10 +55,6 @@ export function useTutorChat(lessonId: string): UseTutorChatResult {
       isMounted = false;
     };
   }, [loadHistory]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isSending]);
 
   const sendMessage = useCallback(
     async (text: string): Promise<boolean> => {
@@ -164,7 +149,6 @@ export function useTutorChat(lessonId: string): UseTutorChatResult {
     sendError,
     inputMessage,
     setInputMessage,
-    messagesEndRef,
     handleSubmit,
     handleKeyDown,
     handleSuggestionClick,

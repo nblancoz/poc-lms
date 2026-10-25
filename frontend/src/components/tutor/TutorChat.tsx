@@ -18,7 +18,6 @@ export function TutorChat({ lessonId, lessonTitle }: TutorChatProps) {
     sendError,
     inputMessage,
     setInputMessage,
-    messagesEndRef,
     handleSubmit,
     handleKeyDown,
     handleSuggestionClick,
@@ -37,7 +36,6 @@ export function TutorChat({ lessonId, lessonTitle }: TutorChatProps) {
         isLoading={isLoadingHistory}
         isSending={isSending}
         onSelectSuggestion={handleSuggestionClick}
-        messagesEndRef={messagesEndRef}
       />
       {sendError && (
         <div style={{ padding: '0 16px 8px' }}>

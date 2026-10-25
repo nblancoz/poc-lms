@@ -1,4 +1,4 @@
-import type { RefObject } from 'react';
+import { useEffect, useRef } from 'react';
 import type { TutorMessage } from '../../types/tutor';
 import { TutorMessageItem } from './TutorMessageItem';
 import { TutorSuggestions } from './TutorSuggestions';
@@ -9,7 +9,6 @@ export interface TutorMessageListProps {
   isLoading: boolean;
   isSending: boolean;
   onSelectSuggestion: (suggestion: string) => void;
-  messagesEndRef: RefObject<HTMLDivElement | null>;
   suggestions?: string[];
 }
 
@@ -24,11 +23,22 @@ export function TutorMessageList({
   isLoading,
   isSending,
   onSelectSuggestion,
-  messagesEndRef,
   suggestions = DEFAULT_SUGGESTIONS,
 }: TutorMessageListProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!containerRef.current || isLoading) return;
+
+    requestAnimationFrame(() => {
+      if (containerRef.current) {
+        containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      }
+    });
+  }, [messages, isLoading, isSending]);
+
   return (
-    <div className="tutor-chat-messages" role="log" aria-live="polite">
+    <div ref={containerRef} className="tutor-chat-messages" role="log" aria-live="polite">
       {isLoading ? (
         <div className="tutor-chat-loading">
           <span className="spinner-sm" />
@@ -46,7 +56,6 @@ export function TutorMessageList({
             <TutorMessageItem key={msg.id} message={msg} />
           ))}
           {isSending && <TutorTypingIndicator />}
-          <div ref={messagesEndRef} />
         </div>
       )}
     </div>
