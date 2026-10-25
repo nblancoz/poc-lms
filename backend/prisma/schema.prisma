@@ -14,7 +14,8 @@ model User {
   name        String
   password    String
   createdAt   DateTime     @default(now())
-  enrollments Enrollment[]
+  enrollments   Enrollment[]
+  tutorSessions TutorSession[]
 }
 
 model Course {
@@ -27,12 +28,13 @@ model Course {
 }
 
 model Lesson {
-  id       String @id @default(uuid())
-  courseId String
-  title    String
-  content  String @db.Text
-  order    Int    @default(1)
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  id            String         @id @default(uuid())
+  courseId      String
+  title         String
+  content       String         @db.Text
+  order         Int            @default(1)
+  course        Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  tutorSessions TutorSession[]
 }
 
 model Enrollment {
@@ -43,4 +45,26 @@ model Enrollment {
   course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@id([userId, courseId])
+}
+
+model TutorSession {
+  id        String         @id @default(uuid())
+  userId    String
+  lessonId  String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson    Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  messages  TutorMessage[]
+
+  @@unique([userId, lessonId])
+}
+
+model TutorMessage {
+  id        String       @id @default(uuid())
+  sessionId String
+  role      String
+  content   String       @db.Text
+  createdAt DateTime     @default(now())
+  session   TutorSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 }
