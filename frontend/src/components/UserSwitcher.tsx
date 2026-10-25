@@ -1,6 +1,10 @@
 import { useState } from 'react';
-import { PRESET_USERS, useAuth, type PresetUserType } from '../context';
-import { Alert, Card, SelectableCard, StatusDot, type StatusDotProps } from './ui';
+import { PRESET_USERS, type PresetUserType } from '../context/presets';
+import { useAuth } from '../context/useAuth';
+import { Alert } from './ui/Alert';
+import { Card } from './ui/Card';
+import { SelectableCard } from './ui/SelectableCard';
+import { StatusDot, type StatusDotProps } from './ui/StatusDot';
 
 interface PresetItem {
   key: PresetUserType;
