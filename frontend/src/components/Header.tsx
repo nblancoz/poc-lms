@@ -1,5 +1,6 @@
-import { useAuth } from '../context';
-import { Badge, Button } from './ui';
+import { useAuth } from '../context/useAuth';
+import { Badge } from './ui/Badge';
+import { Button } from './ui/Button';
 
 export function Header() {
   const { user, logout } = useAuth();

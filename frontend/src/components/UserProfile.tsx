@@ -1,5 +1,8 @@
-import { PRESET_USERS, useAuth } from '../context';
-import { Badge, Button, Card } from './ui';
+import { PRESET_USERS } from '../context/presets';
+import { useAuth } from '../context/useAuth';
+import { Badge } from './ui/Badge';
+import { Button } from './ui/Button';
+import { Card } from './ui/Card';
 
 export function UserProfile() {
   const { user, logout } = useAuth();

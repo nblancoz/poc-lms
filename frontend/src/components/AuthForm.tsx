@@ -1,6 +1,10 @@
 import { useState, type SyntheticEvent } from 'react';
-import { useAuth } from '../context';
-import { Alert, Button, Card, Input, Tabs, type TabItem } from './ui';
+import { useAuth } from '../context/useAuth';
+import { Alert } from './ui/Alert';
+import { Button } from './ui/Button';
+import { Card } from './ui/Card';
+import { Input } from './ui/Input';
+import { Tabs, type TabItem } from './ui/Tabs';
 
 type AuthTab = 'login' | 'register';
 
