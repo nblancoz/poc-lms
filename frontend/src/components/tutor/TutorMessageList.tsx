@@ -1,4 +1,3 @@
-import type { RefObject } from 'react';
 import type { TutorMessage } from '../../types/tutor';
 import { TutorMessageItem } from './TutorMessageItem';
 import { TutorSuggestions } from './TutorSuggestions';
@@ -9,7 +8,6 @@ export interface TutorMessageListProps {
   isLoading: boolean;
   isSending: boolean;
   onSelectSuggestion: (suggestion: string) => void;
-  messagesEndRef: RefObject<HTMLDivElement | null>;
   suggestions?: string[];
 }
 
@@ -24,11 +22,14 @@ export function TutorMessageList({
   isLoading,
   isSending,
   onSelectSuggestion,
-  messagesEndRef,
   suggestions = DEFAULT_SUGGESTIONS,
 }: TutorMessageListProps) {
   return (
-    <div className="tutor-chat-messages" role="log" aria-live="polite">
+    <div
+      className={`tutor-chat-messages ${messages.length > 0 ? 'has-messages' : ''}`}
+      role="log"
+      aria-live="polite"
+    >
       {isLoading ? (
         <div className="tutor-chat-loading">
           <span className="spinner-sm" />
@@ -46,7 +47,6 @@ export function TutorMessageList({
             <TutorMessageItem key={msg.id} message={msg} />
           ))}
           {isSending && <TutorTypingIndicator />}
-          <div ref={messagesEndRef} />
         </div>
       )}
     </div>

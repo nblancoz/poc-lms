@@ -64,11 +64,9 @@ export function AuthForm() {
   }
 
   return (
-    <Card>
+    <Card className="auth-card">
       <Tabs items={AUTH_TABS} activeTab={tab} onChange={handleTabChange} />
-
       {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
-
       <form onSubmit={handleSubmit} noValidate>
         {tab === 'register' && (
           <Input
@@ -82,7 +80,6 @@ export function AuthForm() {
             disabled={isLoading}
           />
         )}
-
         <Input
           id="auth-email"
           label="Correo electrónico"
@@ -94,7 +91,6 @@ export function AuthForm() {
           disabled={isLoading}
           autoComplete="email"
         />
-
         <Input
           id="auth-password"
           label="Contraseña"
@@ -106,7 +102,6 @@ export function AuthForm() {
           disabled={isLoading}
           autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
         />
-
         <div style={{ marginTop: '24px' }}>
           <Button type="submit" variant="solid" fullWidth isLoading={isLoading}>
             {tab === 'login' ? 'Iniciar sesión' : 'Crear cuenta'}

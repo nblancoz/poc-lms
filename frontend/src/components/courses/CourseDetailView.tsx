@@ -1,7 +1,7 @@
-import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import type { ReactNode } from 'react';
 import type { Course } from '../../types/course';
 import { Alert } from '../ui/Alert';
+import { BackButton } from '../ui/BackButton';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
@@ -26,10 +26,7 @@ export function CourseDetailView({
   return (
     <Card className="course-card-content">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Button variant="outline" size="sm" onClick={onBack}>
-          <ArrowLeftIcon style={{ width: 14, height: 14 }} aria-hidden="true" />
-          Todos los cursos
-        </Button>
+        <BackButton onClick={onBack}>Todos los cursos</BackButton>
         <Badge variant={course.isEnrolled ? 'enrolled' : 'noaccess'}>
           {course.isEnrolled ? 'Matrícula activa' : 'Sin matrícula'}
         </Badge>

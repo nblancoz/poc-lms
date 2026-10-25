@@ -2,6 +2,7 @@ import { CourseDetailView } from '../components/courses/CourseDetailView';
 import { CourseList } from '../components/courses/CourseList';
 import { LessonList } from '../components/lessons/LessonList';
 import { LessonViewer } from '../components/lessons/LessonViewer';
+import { UserSwitcher } from '../components/UserSwitcher';
 import { useLearningDashboard } from '../hooks/useLearningDashboard';
 
 export function LearningDashboard() {
@@ -43,35 +44,41 @@ export function LearningDashboard() {
         }
 
         return (
-          <CourseDetailView
-            course={selectedCourse}
-            onBack={handleBackToCatalog}
-            onEnroll={() => void handleEnroll(view.courseId)}
-            isEnrolling={isEnrolling}
-            enrollError={enrollError}
-          >
-            <div style={{ marginTop: '20px' }}>
-              <h3 className="section-title" style={{ fontSize: '0.95rem' }}>
-                Temario del curso ({selectedCourse.lessons.length})
-              </h3>
-              <LessonList
-                lessons={selectedCourse.lessons}
-                isEnrolled={selectedCourse.isEnrolled}
-                onSelectLesson={(lessonId) => handleSelectLesson(view.courseId, lessonId)}
-              />
-            </div>
-          </CourseDetailView>
+          <>
+            <UserSwitcher />
+            <CourseDetailView
+              course={selectedCourse}
+              onBack={handleBackToCatalog}
+              onEnroll={() => void handleEnroll(view.courseId)}
+              isEnrolling={isEnrolling}
+              enrollError={enrollError}
+            >
+              <div style={{ marginTop: '20px' }}>
+                <h3 className="section-title" style={{ fontSize: '0.95rem' }}>
+                  Temario del curso ({selectedCourse.lessons.length})
+                </h3>
+                <LessonList
+                  lessons={selectedCourse.lessons}
+                  isEnrolled={selectedCourse.isEnrolled}
+                  onSelectLesson={(lessonId) => handleSelectLesson(view.courseId, lessonId)}
+                />
+              </div>
+            </CourseDetailView>
+          </>
         );
 
       case 'catalog':
       default:
         return (
-          <CourseList
-            courses={courses}
-            isLoading={loadingCourses}
-            error={coursesError}
-            onSelectCourse={handleSelectCourse}
-          />
+          <>
+            <UserSwitcher />
+            <CourseList
+              courses={courses}
+              isLoading={loadingCourses}
+              error={coursesError}
+              onSelectCourse={handleSelectCourse}
+            />
+          </>
         );
     }
   }

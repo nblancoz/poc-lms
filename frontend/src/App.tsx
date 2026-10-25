@@ -12,14 +12,15 @@ function MainApp() {
     <>
       <Header />
       <main className="main-content">
-        <UserSwitcher />
-
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '60px' }}>
             <div className="spinner-md" />
           </div>
         ) : !user ? (
-          <AuthForm />
+          <>
+            <UserSwitcher />
+            <AuthForm />
+          </>
         ) : (
           <LearningDashboard key={user.id} />
         )}

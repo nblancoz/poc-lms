@@ -5,12 +5,12 @@ export const PRESET_USERS = {
     email: 'student.enrolled@example.com',
     password: 'password123',
     name: 'Alumno Matriculado',
-    description: 'Tiene matrícula activa en el curso de TypeScript.',
+    description: 'Tiene matrícula activa.',
   },
   noaccess: {
     email: 'student.noaccess@example.com',
     password: 'password123',
     name: 'Alumno Sin Acceso',
-    description: 'No está matriculado. Ideal para probar el 403 Forbidden.',
+    description: 'No está matriculado.',
   },
 } as const;
