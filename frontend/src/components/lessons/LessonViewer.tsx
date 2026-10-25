@@ -7,6 +7,8 @@ import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { LessonAccessDenied } from './LessonAccessDenied';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export interface LessonViewerProps {
   lessonId: string;
@@ -141,7 +143,9 @@ export function LessonViewer({
         </h2>
       </div>
 
-      <div className="lesson-content">{lesson.content}</div>
+      <div className="lesson-content">
+        <Markdown remarkPlugins={[remarkGfm]}>{lesson.content}</Markdown>
+      </div>
     </Card>
   );
 }

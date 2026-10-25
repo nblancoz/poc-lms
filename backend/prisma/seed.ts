@@ -38,66 +38,185 @@ async function main() {
   console.log(`   - Enrolled: ${studentEnrolled.email}`);
   console.log(`   - No Access: ${studentNoAccess.email}`);
 
-  const course = await prisma.course.create({
+  const course1 = await prisma.course.create({
     data: {
-      title: 'Desarrollo Avanzado con TypeScript y Arquitectura de Software',
+      title: 'Practical Everyday English & Pronunciation',
       description:
-        'Curso completo sobre tipado estático, buenas prácticas de desarrollo en TypeScript y patrones arquitectónicos modernos como Arquitectura Hexagonal.',
+        'Master essential conversational English for daily situations, travel, dining out, and social interactions with clear pronunciation tips and practical dialogues.',
     },
   });
 
-  console.log(`📚 Course created: "${course.title}"`);
+  const course2 = await prisma.course.create({
+    data: {
+      title: 'Business English & Professional Communication',
+      description:
+        'Develop your professional English skills for job interviews, workplace meetings, elevator pitches, and professional networking.',
+    },
+  });
+
+  console.log(`📚 Courses created:`);
+  console.log(`   1. "${course1.title}"`);
+  console.log(`   2. "${course2.title}"`);
 
   const lesson1Content = `
-# Lección 1: Fundamentos de TypeScript y Tipado Estático
+Welcome to your practical travel English lesson! In this unit, you will learn the essential phrases, key vocabulary, and common dialogues needed to navigate an international airport and check in at a hotel with confidence.
 
-TypeScript es un superset tipado de JavaScript desarrollado por Microsoft que añade tipado estático opcional y características avanzadas al lenguaje. Todo código JavaScript válido es código TypeScript válido.
+---
 
-## Beneficios Principales
-1. **Detección temprana de errores**: Los errores de tipo se detectan en tiempo de compilación y no en tiempo de ejecución en producción.
-2. **Autocompletado y refactorización segura**: Los IDEs proporcionan IntelliSense contextual preciso.
-3. **Documentación viva**: Los tipos sirven como especificación clara del contrato de las funciones y componentes.
+## 1. Key Travel Vocabulary
 
-## Tipos Básicos
-- Primitivos: \`string\`, \`number\`, \`boolean\`, \`null\`, \`undefined\`, \`symbol\`, \`bigint\`.
-- Especiales: \`any\` (desactiva comprobaciones de tipo, evitar cuando sea posible), \`unknown\` (tipo seguro opuesto a any, exige comprobación previa antes de operar), \`void\` (funciones sin retorno), \`never\` (valores que nunca ocurren, como funciones que siempre lanzan excepción).
+| Término | ¿Cómo suena? (Pronunciación) | Significado / Uso |
+| :--- | :--- | :--- |
+| **Boarding pass** | *bór-ding pas* | Tarjeta de embarque física o digital. |
+| **Carry-on luggage** | *cárri-on láguedsh* | Equipaje de mano permitido en cabina. |
+| **Checked baggage** | *chekt báguedsh* | Maletas facturadas que van a bodega. |
+| **Aisle seat** | *áil siit* (la "s" es muda) | Asiento de pasillo. |
+| **Window seat** | *uín-dou siit* | Asiento de ventanilla. |
+| **Reservation / Booking** | *re-ser-véi-shon / bú-king* | Reserva confirmada de hotel o vuelo. |
+| **Keycard** | *kíi-card* | Tarjeta electrónica para abrir la habitación. |
+| **Amenities** | *aménitis* | Servicios e instalaciones (piscina, gimnasio, etc.). |
 
-## Interfaces vs Types
-- **Interfaces**: Ideales para definir la forma de objetos y contratos extensibles mediante declaración abierta (\`declaration merging\`) y herencia con \`extends\`.
-- **Type Aliases**: Más versátiles para uniones (\`type Status = 'pending' | 'success' | 'error'\`), tuplas, tipos primitivos y tipos mapeados.
+---
 
-## Type Narrowing (Estrechamiento de Tipos)
-TypeScript utiliza comprobaciones de control de flujo en tiempo de ejecución para reducir un tipo amplio a uno más específico:
-- Operador \`typeof\` (para primitivos: \`typeof x === 'string'\`).
-- Operador \`instanceof\` (para instancias de clases).
-- Discriminación mediante campos literales comunes (\`Discriminated Unions\`).
-- Predicados de tipo personalizados (\`function isFish(pet: Pet): pet is Fish\`).
+## 2. Airport Dialogues & Useful Phrases
+
+### At the Check-in Counter
+- **Agent:** *"Good morning! Where are you flying to today?"*
+- **Passenger:** *"Good morning. I'm flying to London on flight BA245."*
+- **Agent:** *"May I see your passport and booking reference, please?"*
+- **Passenger:** *"Here you go. Could I please have an aisle seat if available?"*
+- **Agent:** *"Sure. Do you have any bags to check, or just this carry-on?"*
+- **Passenger:** *"Just one checked suitcase and a small backpack."*
+- **Agent:** *"Here is your boarding pass. Gate B12, boarding starts at 10:15 AM."*
+
+---
+
+## 3. Hotel Check-In Dialogues
+
+### Arriving at the Reception Desk
+- **Guest:** *"Hello, good afternoon! I have a reservation under the name Juan."*
+- **Receptionist:** *"Welcome to the Grand Central Hotel. Yes, a double room for three nights, correct?"*
+- **Guest:** *"That's correct. What time is breakfast served in the morning?"*
+- **Receptionist:** *"Breakfast is served from 7:00 AM to 10:30 AM in the main restaurant on the ground floor."*
+- **Guest:** *"Is high-speed Wi-Fi included in the room rate?"*
+- **Receptionist:** *"Yes, completely complimentary. Here is your keycard for room 402. The elevator is to your right."*
+
+---
+
+## 4. Pronunciation & Common Mistakes Tip
+1. **Silent Letters:** En la palabra **aisle** (suena *"áil"*), la letra **s** es completamente muda. Nunca digas *"eyes-le"*.
+2. **Travel vs Trip:** 
+   - **Travel** es una actividad general o verbo (*"I love to travel"*).
+   - **Trip** es un sustantivo para el viaje o trayecto puntual (*"Have a safe trip!"*).
 `.trim();
 
   const lesson2Content = `
-# Lección 2: Arquitectura Hexagonal y Puertos y Adaptadores
+Dining out is one of the most rewarding ways to practice spoken English. In this lesson, you will learn how to make reservations, request a table, order meals politely, and ask for the bill.
 
-La Arquitectura Hexagonal (también conocida como patrón de Puertos y Adaptadores) fue acuñada por Alistair Cockburn con el objetivo de aislar el núcleo del dominio de negocio de las tecnologías externas y de la infraestructura.
+---
 
-## Principios Fundamentales
-1. **Independencia tecnológica**: El núcleo de la aplicación no debe saber nada sobre bases de datos, frameworks HTTP, interfaces gráficas o APIs externas.
-2. **Regla de Dependencia**: Las dependencias siempre apuntan hacia adentro, hacia el dominio.
-3. **Facilidad de pruebas**: Al no acoplarse a tecnologías externas, el dominio y los casos de uso se pueden probar con tests unitarios rápidos mediante mocks de los puertos.
+## 1. Restaurant Vocabulary
 
-## Componentes Clave
-- **Dominio / Entidades**: Reglas de negocio puras y objetos de valor sin dependencias de librerías externas.
-- **Puertos**: Interfaces que definen los contratos de comunicación:
-  - *Puertos de entrada (Driving/Primary)*: Casos de uso ejecutados por actores externos (controladores web, CLI).
-  - *Puertos de salida (Driven/Secondary)*: Interfaces implementadas por la infraestructura (repositorios de base de datos, clientes de correo, proveedores de LLM o síntesis de voz).
-- **Adaptadores**: Implementaciones concretas de los puertos:
-  - *Adaptadores de entrada*: Controladores Express, componentes UI de React.
-  - *Adaptadores de salida*: Implementación de Prisma/PostgreSQL, llamadas a Gemini API, Web Speech API.
+| Término | ¿Cómo suena? (Pronunciación) | Significado / Uso |
+| :--- | :--- | :--- |
+| **Appetizer / Starter** | *ápetáiser / stár-ter* | Entrada o plato inicial (ensalada, sopa). |
+| **Main course / Entrée** | *méin cors / on-tréi* | Plato principal fuerte. |
+| **Side dish** | *sáid dish* | Guarnición (papas fritas, vegetales). |
+| **Beverage / Drink** | *béveredsh / drink* | Bebida (con o sin alcohol). |
+| **The bill / The check** | *de bil / de chek* | La cuenta al finalizar la comida. |
+| **Tip / Gratuity** | *tip / gratúiti* | Propina por el servicio. |
+| **Still / Sparkling water** | *stil / spárk-ling uóter* | Agua sin gas (still) o con gas (sparkling). |
+
+---
+
+## 2. Practical Restaurant Dialogue
+
+### Seating and Ordering
+- **Server:** *"Good evening! Table for two?"*
+- **Customer:** *"Yes, please. Could we sit by the window?"*
+- **Server:** *"Right this way. Can I start you off with something to drink?"*
+- **Customer:** *"Just tap water for now, thank you. Could we have a few minutes to look over the menu?"*
+
+### Ordering the Main Course
+- **Server:** *"Are you ready to order?"*
+- **Customer:** *"Yes. I'll have the grilled salmon with asparagus, please."*
+- **Server:** *"Excellent choice. And for you, sir?"*
+- **Customer 2:** *"Could I get the mushroom risotto? But please, could I have the sauce on the side?"*
+- **Server:** *"Of course, no problem at all."*
+
+### Asking for the Check
+- **Customer:** *"Excuse me, could we have the check, please?"*
+- **Server:** *"Certainly. Will you be paying together or splitting the bill?"*
+- **Customer:** *"Together, please. Do you accept contactless credit cards?"*
+- **Server:** *"Yes, we do. Take your time."*
+
+---
+
+## 3. Politeness Rule in English
+Always prefer **modal verbs** for polite requests:
+- Use: *"Could I have..."* or *"I would like..."* (or contracted: *"I'd like..."*).
+- Avoid: *"I want the soup"* (sounds blunt and demanding to native speakers).
+`.trim();
+
+  const lesson3Content = `
+In professional environments, first impressions matter. This lesson covers how to introduce yourself in business settings, deliver a concise elevator pitch, and engage in polite workplace small talk.
+
+---
+
+## 1. Professional Greetings & Introductions
+
+- **Formal:** *"Good morning. It is a pleasure to meet you. My name is..."*
+- **Semi-formal / Networking:** *"Hello, great to connect with you. I'm [Name], working as a [Role] at [Company]."*
+- **Follow-up question:** *"How long have you been with the company?"* or *"What brings you to this conference?"*
+
+---
+
+## 2. Structure of the 30-Second Elevator Pitch
+
+A successful elevator pitch answers three core questions in less than 30 seconds:
+1. **Who you are:** Your background and current specialization.
+2. **What problem you solve:** The impact or value you deliver to clients or your team.
+3. **Your call to action / Open question:** Inviting further dialogue.
+
+### Example Pitch:
+> *"Hi, I'm Juan. I specialize in building modern, accessible web applications and AI-assisted educational platforms. Over the past three years, I've helped teams streamline interactive learning experiences for remote students. I'd love to learn more about how your team approaches digital education."*
+
+---
+
+## 3. Safe Workplace Small Talk Topics
+- **Weather & Commute:** *"Did you have any trouble finding the venue today?"*
+- **Industry Insights:** *"What did you think of the keynote presentation this morning?"*
+- **Weekend / Projects:** *"Any exciting projects keeping your team busy this quarter?"*
+`.trim();
+
+  const lesson4Content = `
+Effective communication in English-speaking business meetings requires active listening, tactful interruptions, and clear alignment on next steps.
+
+---
+
+## 1. Key Meeting Phrases & Transitions
+
+| Purpose | Recommended Phrase |
+| :--- | :--- |
+| **Starting the meeting** | *"Let's get down to business. The purpose of today's meeting is..."* |
+| **Staying on schedule** | *"Let's make sure we stick to the agenda so we respect everyone's time."* |
+| **Asking for input** | *"Sarah, what are your thoughts on this proposal?"* |
+| **Polite disagreement** | *"I see where you're coming from, but have we considered the deadline risk?"* |
+| **Reaching consensus** | *"Are we all in agreement on this approach moving forward?"* |
+| **Assigning next steps** | *"Let's summarize action items: who will take ownership of this task?"* |
+
+---
+
+## 2. Diplomatically Disagreeing
+In business English, direct disagreement can sound aggressive. Use softeners:
+- Instead of: *"You are wrong about the cost."*
+- Use: *"I understand your point, but from our financial projections, the cost might be slightly higher."*
 `.trim();
 
   const lesson1 = await prisma.lesson.create({
     data: {
-      courseId: course.id,
-      title: 'Fundamentos de TypeScript y Tipado Estático',
+      courseId: course1.id,
+      title: 'At the Airport & Hotel: Essential Travel English',
       content: lesson1Content,
       order: 1,
     },
@@ -105,29 +224,52 @@ La Arquitectura Hexagonal (también conocida como patrón de Puertos y Adaptador
 
   const lesson2 = await prisma.lesson.create({
     data: {
-      courseId: course.id,
-      title: 'Arquitectura Hexagonal y Puertos y Adaptadores',
+      courseId: course1.id,
+      title: 'Ordering Food & Dining Out: Restaurant Conversations',
       content: lesson2Content,
       order: 2,
     },
   });
 
+  const lesson3 = await prisma.lesson.create({
+    data: {
+      courseId: course2.id,
+      title: 'Professional Introductions & The 30-Second Elevator Pitch',
+      content: lesson3Content,
+      order: 1,
+    },
+  });
+
+  const lesson4 = await prisma.lesson.create({
+    data: {
+      courseId: course2.id,
+      title: 'Leading & Participating in Work Meetings',
+      content: lesson4Content,
+      order: 2,
+    },
+  });
+
   console.log(`📖 Lessons created:`);
-  console.log(`   1. "${lesson1.title}"`);
-  console.log(`   2. "${lesson2.title}"`);
+  console.log(`   - Course 1: "${lesson1.title}", "${lesson2.title}"`);
+  console.log(`   - Course 2: "${lesson3.title}", "${lesson4.title}"`);
 
   await prisma.enrollment.create({
     data: {
       userId: studentEnrolled.id,
-      courseId: course.id,
+      courseId: course1.id,
     },
   });
 
   console.log(`🎓 Enrollment created:`);
-  console.log(`   - "${studentEnrolled.name}" matriculado en "${course.title}"`);
-  console.log(`   - "${studentNoAccess.name}" NO está matriculado`);
+  console.log(`   - "${studentEnrolled.name}" matriculado en "${course1.title}"`);
+  console.log(
+    `   - "${studentEnrolled.name}" NO matriculado en "${course2.title}" (para probar RBAC)`,
+  );
+  console.log(
+    `   - "${studentNoAccess.name}" NO matriculado en ningún curso (control total de acceso)`,
+  );
 
-  console.log('✅ Database seeded successfully!');
+  console.log('✅ Database seeded successfully with English learning curriculum!');
 }
 
 main()

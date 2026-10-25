@@ -606,14 +606,111 @@ body {
 }
 
 .lesson-content {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   line-height: 1.7;
   color: var(--text-secondary);
   background: var(--bg-page);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 20px;
-  white-space: pre-wrap;
+  padding: 24px;
+}
+
+.lesson-content h1,
+.lesson-content h2,
+.lesson-content h3,
+.lesson-content h4 {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.lesson-content h1:first-child,
+.lesson-content h2:first-child {
+  margin-top: 0;
+}
+
+.lesson-content h1 {
+  font-size: 1.35rem;
+}
+
+.lesson-content h2 {
+  font-size: 1.15rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 8px;
+}
+
+.lesson-content h3 {
+  font-size: 1.05rem;
+}
+
+.lesson-content p {
+  margin-bottom: 16px;
+}
+
+.lesson-content hr {
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+  margin: 24px 0;
+}
+
+.lesson-content ul,
+.lesson-content ol {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+.lesson-content li {
+  margin-bottom: 6px;
+}
+
+.lesson-content blockquote {
+  border-left: 3px solid var(--accent);
+  margin: 16px 0;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-muted);
+  font-style: italic;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.lesson-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 0.875rem;
+}
+
+.lesson-content th,
+.lesson-content td {
+  border: 1px solid var(--border-subtle);
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.lesson-content th {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.lesson-content tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.lesson-content strong {
+  color: var(--text-primary);
+}
+
+.lesson-content code {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85em;
+  color: var(--accent);
 }
 
 .forbidden-box {
