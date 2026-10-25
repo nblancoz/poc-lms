@@ -30,6 +30,7 @@ A functional Proof of Concept (POC) demonstrating an artificial intelligence-ass
 ## 3. Prerequisites
 
 - **Node.js**: Version `>= 24.0.0` (managed via `.nvmrc` or `nvm use`).
+- **pnpm**: Version `>= 10.0.0` (`npm install -g pnpm` or `brew install pnpm`).
 - **Docker & Docker Compose**: For running the PostgreSQL database container.
 
 ---
@@ -66,7 +67,7 @@ docker compose up -d
 Install all root and workspace dependencies (`backend` and `frontend`):
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Step 5: Initialize and seed the database
@@ -74,7 +75,7 @@ npm install
 Apply Prisma database migrations and seed preconfigured test users, courses, and lessons:
 
 ```bash
-npm run db:setup
+pnpm run db:setup
 ```
 
 ### Step 6: Start the development environment
@@ -82,7 +83,7 @@ npm run db:setup
 Run both the backend API and frontend development server concurrently:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 - **Frontend Application**: [http://localhost:5173](http://localhost:5173)
@@ -169,25 +170,25 @@ The following commands are available from the root repository:
 
 ```bash
 # Run backend (:3000) and frontend (:5173) concurrently
-npm run dev
+pnpm run dev
 
 # Execute database migrations and seed data
-npm run db:setup
+pnpm run db:setup
 
 # Run strict TypeScript checks across all workspaces
-npm run typecheck
+pnpm run typecheck
 
 # Run static analysis with ESLint
-npm run lint
+pnpm run lint
 
 # Auto-format all code with Prettier
-npm run format
+pnpm run format
 
 # Verify code formatting with Prettier
-npm run format:check
+pnpm run format:check
 
 # Build both backend and frontend bundles for production
-npm run build
+pnpm run build
 ```
 
 ---
