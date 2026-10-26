@@ -23,7 +23,7 @@ A functional Proof of Concept (POC) demonstrating an artificial intelligence-ass
 - **Frontend**: React 19, TypeScript, Vite, `react-markdown`, `rehype-raw`, `rehype-sanitize`, `remark-gfm`, `@heroicons/react`.
 - **Backend**: Node.js, Express, TypeScript, Prisma ORM, `@google/genai` (Official Google Gemini SDK), Zod, JWT, bcryptjs.
 - **Database**: PostgreSQL 16 (via Docker Compose) managed with Prisma.
-- **Code Quality & Testing**: Jest, ESLint 9 (Flat Config), Prettier, Strict TypeScript, Commitlint.
+- **Code Quality & Testing**: Jest (34 tests across backend and frontend), React Testing Library, ESLint 9 (Flat Config), Prettier, Strict TypeScript, Commitlint.
 
 ---
 
@@ -164,7 +164,32 @@ Follow these steps to evaluate the end-to-end functionality of the POC:
 
 ---
 
-## 9. Available Scripts
+## 9. Automated Testing Suite
+
+The repository incorporates an end-to-end automated test suite comprised of **34 unit and integration tests** executed via Jest across both workspaces in continuous integration (CI) and local development:
+
+### Backend Test Suites (`22 tests` via `backend/test/`):
+
+- **Access Control & Anti-IDOR (`enrollment.middleware.test.ts`)**: Validates unauthenticated rejection (401), missing lesson ID (400), non-existent lessons (404), unenrolled access denial (403 Forbidden — Lucía scenario), and enrolled student authorization (200 OK — Carlos scenario).
+- **Authentication Middleware (`auth.middleware.test.ts`)**: Validates missing Authorization header (401), non-Bearer header format (401), expired or forged JWT tokens (401), and populated `req.user` payload upon valid cryptographic signature.
+- **Pedagogical Mock AI Provider (`mock.provider.test.ts`)**: Validates realistic domain explanations (airports, hotels, travel vocabulary, grammar nuances), phonetic pronunciation guidance, inclusion of semantic `<span lang="en">` TTS tags, and strict enforcement of the `OFF_TOPIC_RESPONSE` boundary for out-of-scope inquiries.
+- **Input Sanitization & Normalization (`sanitize.test.ts`)**: Validates stripping of active executable HTML tags (`<script>`, `<iframe>`), neutralization of inline event handlers (`onerror`, `onclick`), removal of invisible zero-width spaces/control characters, Unicode NFKC normalization, and Zod schema rejection of empty/malicious messages.
+
+### Frontend Test Suites (`12 tests` via `frontend/test/`):
+
+- **User Switcher & Auth Presets (`UserSwitcher.test.tsx`)**: Validates rendering of preset user cards, accessible active status indication (`aria-pressed="true"`, `.active`), dynamic preset switching via `quickLogin`, and graceful error alert presentation.
+- **Course Enrollment Guard (`LessonAccessDenied.test.tsx`)**: Validates the 403 Forbidden restricted view, navigation recovery callbacks (`onBack`), and interactive enrollment CTA with loading state.
+- **Bilingual Tutor Message Bubble (`TutorMessageItem.test.tsx`)**: Validates user vs. assistant badge rendering, Markdown formatting, preservation of `<span lang="en">` bilingual voice markup, and accessible audio speaker playback controls.
+
+To run the entire suite across both workspaces concurrently:
+
+```bash
+pnpm test
+```
+
+---
+
+## 10. Available Scripts
 
 The following commands are available from the root repository:
 
@@ -192,11 +217,10 @@ pnpm run test
 
 # Build both backend and frontend bundles for production
 pnpm run build
-
 ```
 
 ---
 
-## 10. License
+## 11. License
 
 This project is licensed under the terms described in the [LICENSE](./LICENSE) file.
