@@ -12,7 +12,8 @@ on:
 
 jobs:
   verify:
-    name: Code Quality & Build (Prettier, ESLint, TypeScript, Build)
+    name: Code Quality, Tests & Build (Prettier, ESLint, TypeScript, Jest, Build)
+
     runs-on: ubuntu-latest
 
     steps:
@@ -42,6 +43,9 @@ jobs:
 
       - name: Run TypeScript typecheck
         run: pnpm run typecheck
+
+      - name: Run automated test suite
+        run: pnpm run test
 
       - name: Build packages
         run: pnpm run build

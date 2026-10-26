@@ -4,7 +4,9 @@ packages:
 
 allowBuilds:
   '@google/genai': true
+  '@parcel/watcher': true
   '@prisma/engines': true
   esbuild: true
   prisma: true
   protobufjs: true
+  unrs-resolver: true
