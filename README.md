@@ -131,12 +131,14 @@ Follow these steps to evaluate the end-to-end functionality of the POC:
      `"No tengo información en esta lección para responder a eso."`
 
 5. **Access Control & Anti-IDOR Verification**:
-   - Use the **User Switcher** in the top bar to switch to the **Unauthorized Student** (`student.noaccess@example.com`).
-   - Attempt to navigate to the previous lesson URL.
-   - Verify that access is explicitly denied, preventing unauthorized inspection of both the lesson content and previous chat messages.
+   - In the navigation bar, click **"Cerrar sesión"** (or logout) to return to the authentication screen.
+   - Select the **Estudiante no matriculada** preset profile (`lucia.mendez@example.com`).
+   - Attempt to navigate to the lesson URL or course view.
+   - Verify that access is explicitly blocked with a **403 Forbidden** screen (`LessonAccessDenied`), preventing unauthorized inspection of both the lesson content and previous student chat exchanges.
+   - _(Note: If you click "Inscribirme en el curso", the application exercises self-enrollment; to reset Lucía to unenrolled status for repeated evaluation, run `pnpm run db:seed`)._
 
 6. **Conversation Continuity & Persistence**:
-   - Switch back to the **Enrolled Student** profile.
+   - Log out and log back in using the **Estudiante matriculado** profile (`carlos.mendoza@example.com`).
    - Return to the lesson or refresh the browser page (`F5`).
    - Verify that all previous exchanges and suggestions are retrieved intact from the database.
 
@@ -149,11 +151,12 @@ Follow these steps to evaluate the end-to-end functionality of the POC:
 
 ## 7. Design and Architecture Decisions
 
-- **Native Web Speech API**: Leveraged browser-native `SpeechRecognition` and `SpeechSynthesis`. This eliminates recurring third-party API costs, minimizes round-trip latency, and prevents exposing secrets or API keys on the client side.
+- **Native Web Speech API**: Leveraged browser-native `SpeechRecognition` and `SpeechSynthesis`. This eliminates recurring third-party API costs, minimizes round-trip latency, and prevents exposing secrets or API keys on the client side. Modern neural recognition engines in Chrome, Edge, and Safari dynamically transcribe both Spanish and English phrases without requiring artificial language toggles.
 - **Semantic Tagging with Strict XSS Sanitization (`<span lang="en">` with `rehype-sanitize`)**: Rather than relying on fragile stopword dictionaries, the AI tutor wraps English terminology and dialogues in standard HTML tags with language attributes (`lang="en"`). The renderer pairs `rehype-raw` with a tailored `rehype-sanitize` whitelist schema, guaranteeing that bilingual TTS markup renders safely while neutralizing malicious tags (`<script>`, `<iframe>`), attributes (`onerror`, `onclick`), or `javascript:` protocols. In addition, student inputs undergo server-side Unicode and control character normalization before storage and LLM ingestion.
+- **Atomic Chat Message Persistence (`prisma.$transaction`)**: `tutor.service.ts` coordinates message creation inside an atomic Prisma transaction. Both the student query and AI tutor explanation are stored together only after the AI provider successfully returns a complete answer. If the AI provider fails (network timeout, rate limit), the transaction is never executed, preventing orphaned questions in the database.
 - **Decoupled AI Provider Architecture (`AiProvider`)**: The backend separates business logic from specific LLM vendors via an extensible interface. It supports the official Google Gemini SDK (`@google/genai`) for production and a deterministic `MockAiProvider` for automated testing and offline evaluations.
 - **Server-Side IDOR Protection**: Authorization is enforced at the controller and middleware level (`enrollment.middleware.ts`), verifying cryptographic JWTs and querying the database enrollment table before serving any lesson data or chat session.
-- **Quick Profile Switcher for Frictionless Auditing**: Integrated client-side preset switcher allowing evaluators to rapidly test permission boundaries without repetitive credential entry.
+- **Preset Profile Switcher for Frictionless Auditing**: Integrated authentication view with one-click presets allowing evaluators to rapidly test permission boundaries and authentic student journeys without manual credential typing.
 
 ---
 
@@ -166,10 +169,11 @@ Follow these steps to evaluate the end-to-end functionality of the POC:
 
 ## 9. Automated Testing Suite
 
-The repository incorporates an end-to-end automated test suite comprised of **34 unit and integration tests** executed via Jest across both workspaces in continuous integration (CI) and local development:
+The repository incorporates an end-to-end automated test suite comprised of **42 unit and integration tests** executed via Jest across both workspaces in continuous integration (CI) and local development:
 
-### Backend Test Suites (`22 tests` via `backend/test/`):
+### Backend Test Suites (`30 tests` via `backend/test/`):
 
+- **Atomic Persistence & Tutor Service (`tutor.service.test.ts`)**: Validates atomic database transaction (`prisma.$transaction`) ensuring both student query and assistant response are persisted together, zero partial/orphaned records if the LLM provider fails, session reuse and initialization, and chronological chat history retrieval.
 - **Access Control & Anti-IDOR (`enrollment.middleware.test.ts`)**: Validates unauthenticated rejection (401), missing lesson ID (400), non-existent lessons (404), unenrolled access denial (403 Forbidden — Lucía scenario), and enrolled student authorization (200 OK — Carlos scenario).
 - **Authentication Middleware (`auth.middleware.test.ts`)**: Validates missing Authorization header (401), non-Bearer header format (401), expired or forged JWT tokens (401), and populated `req.user` payload upon valid cryptographic signature.
 - **Pedagogical Mock AI Provider (`mock.provider.test.ts`)**: Validates realistic domain explanations (airports, hotels, travel vocabulary, grammar nuances), phonetic pronunciation guidance, inclusion of semantic `<span lang="en">` TTS tags, and strict enforcement of the `OFF_TOPIC_RESPONSE` boundary for out-of-scope inquiries.
