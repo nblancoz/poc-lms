@@ -99,14 +99,6 @@ export async function askTutor(
 
     const session = await getOrCreateTutorSession(userId, lessonId);
 
-    const savedUserMessage = await prisma.tutorMessage.create({
-      data: {
-        sessionId: session.id,
-        role: 'user',
-        content: userMessage.trim(),
-      },
-    });
-
     const history: ChatMessage[] = session.messages.map((m) => ({
       role: m.role as 'user' | 'assistant',
       content: m.content,
@@ -120,13 +112,22 @@ export async function askTutor(
       userMessage,
     });
 
-    const savedAssistantMessage = await prisma.tutorMessage.create({
-      data: {
-        sessionId: session.id,
-        role: 'assistant',
-        content: reply,
-      },
-    });
+    const [savedUserMessage, savedAssistantMessage] = await prisma.$transaction([
+      prisma.tutorMessage.create({
+        data: {
+          sessionId: session.id,
+          role: 'user',
+          content: userMessage.trim(),
+        },
+      }),
+      prisma.tutorMessage.create({
+        data: {
+          sessionId: session.id,
+          role: 'assistant',
+          content: reply,
+        },
+      }),
+    ]);
 
     return {
       success: true,
