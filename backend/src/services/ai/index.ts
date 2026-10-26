@@ -4,22 +4,31 @@ import { MockAiProvider } from './mock.provider';
 
 let cachedProvider: AiProvider | null = null;
 
+export function resetAiProvider(): void {
+  cachedProvider = null;
+}
+
 export function getAiProvider(): AiProvider {
   if (cachedProvider) {
     return cachedProvider;
   }
 
-  const providerType = (process.env.AI_PROVIDER || 'gemini').toLowerCase();
+  const providerType = (process.env.AI_PROVIDER || 'mock').trim().toLowerCase();
 
   if (providerType === 'gemini') {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey || apiKey.trim() === '') {
-      throw new Error(
-        'GEMINI_API_KEY is required when AI_PROVIDER is set to "gemini". Set your key in .env or switch AI_PROVIDER to "mock".',
+    const apiKey = process.env.GEMINI_API_KEY?.trim();
+    const isPlaceholderOrEmpty = !apiKey || apiKey === '' || apiKey === 'your_gemini_api_key_here';
+
+    if (isPlaceholderOrEmpty) {
+      console.warn(
+        '⚠️ [AI Provider] GEMINI_API_KEY is missing or set to placeholder. Falling back to MockAiProvider for seamless offline evaluation.',
       );
+      cachedProvider = new MockAiProvider();
+      return cachedProvider;
     }
+
     console.log('🤖 [AI Provider] Initialized GeminiProvider (model: gemini-3.5-flash)');
-    cachedProvider = new GeminiProvider(apiKey.trim());
+    cachedProvider = new GeminiProvider(apiKey);
     return cachedProvider;
   }
 
@@ -29,7 +38,9 @@ export function getAiProvider(): AiProvider {
     return cachedProvider;
   }
 
-  throw new Error(
-    `Unsupported AI_PROVIDER: "${providerType}". Supported options: "gemini" | "mock".`,
+  console.warn(
+    `⚠️ [AI Provider] Unsupported AI_PROVIDER: "${providerType}". Falling back to MockAiProvider.`,
   );
+  cachedProvider = new MockAiProvider();
+  return cachedProvider;
 }
