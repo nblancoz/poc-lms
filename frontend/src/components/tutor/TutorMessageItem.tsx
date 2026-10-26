@@ -1,8 +1,20 @@
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/20/solid';
 import Markdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import rehypeSanitize, { defaultSchema, type Options as SanitizeSchema } from 'rehype-sanitize';
 import remarkGfm from 'remark-gfm';
 import type { TutorMessage } from '../../types/tutor';
+
+const tutorSanitizeSchema: SanitizeSchema = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    span: [
+      ...((defaultSchema.attributes && defaultSchema.attributes['span']) || []),
+      ['lang', /^[a-zA-Z]{2,3}(-[a-zA-Z0-9]+)?$/],
+    ],
+  },
+};
 
 export interface TutorMessageItemProps {
   message: TutorMessage;
@@ -75,7 +87,10 @@ export function TutorMessageItem({
           {isUser ? (
             <p>{message.content}</p>
           ) : (
-            <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+            <Markdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw, [rehypeSanitize, tutorSanitizeSchema]]}
+            >
               {message.content}
             </Markdown>
           )}

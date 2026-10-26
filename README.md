@@ -20,7 +20,7 @@ A functional Proof of Concept (POC) demonstrating an artificial intelligence-ass
 
 ## 2. Technology Stack
 
-- **Frontend**: React 19, TypeScript, Vite, `react-markdown`, `rehype-raw`, `remark-gfm`, `@heroicons/react`.
+- **Frontend**: React 19, TypeScript, Vite, `react-markdown`, `rehype-raw`, `rehype-sanitize`, `remark-gfm`, `@heroicons/react`.
 - **Backend**: Node.js, Express, TypeScript, Prisma ORM, `@google/genai` (Official Google Gemini SDK), Zod, JWT, bcryptjs.
 - **Database**: PostgreSQL 16 (via Docker Compose) managed with Prisma.
 - **Code Quality**: ESLint 9 (Flat Config), Prettier, Strict TypeScript, Commitlint.
@@ -150,7 +150,7 @@ Follow these steps to evaluate the end-to-end functionality of the POC:
 ## 7. Design and Architecture Decisions
 
 - **Native Web Speech API**: Leveraged browser-native `SpeechRecognition` and `SpeechSynthesis`. This eliminates recurring third-party API costs, minimizes round-trip latency, and prevents exposing secrets or API keys on the client side.
-- **Semantic Tagging (`<span lang="en">`) with `rehype-raw`**: Rather than relying on fragile stopword dictionaries, the AI tutor wraps English terminology and dialogues in standard HTML tags with language attributes (`lang="en"`). The Markdown renderer cleanly handles them for accessibility (`a11y`), while the synthesis hook deterministically routes segments to native language voices.
+- **Semantic Tagging with Strict XSS Sanitization (`<span lang="en">` with `rehype-sanitize`)**: Rather than relying on fragile stopword dictionaries, the AI tutor wraps English terminology and dialogues in standard HTML tags with language attributes (`lang="en"`). The renderer pairs `rehype-raw` with a tailored `rehype-sanitize` whitelist schema, guaranteeing that bilingual TTS markup renders safely while neutralizing malicious tags (`<script>`, `<iframe>`), attributes (`onerror`, `onclick`), or `javascript:` protocols. In addition, student inputs undergo server-side Unicode and control character normalization before storage and LLM ingestion.
 - **Decoupled AI Provider Architecture (`AiProvider`)**: The backend separates business logic from specific LLM vendors via an extensible interface. It supports the official Google Gemini SDK (`@google/genai`) for production and a deterministic `MockAiProvider` for automated testing and offline evaluations.
 - **Server-Side IDOR Protection**: Authorization is enforced at the controller and middleware level (`enrollment.middleware.ts`), verifying cryptographic JWTs and querying the database enrollment table before serving any lesson data or chat session.
 - **Quick Profile Switcher for Frictionless Auditing**: Integrated client-side preset switcher allowing evaluators to rapidly test permission boundaries without repetitive credential entry.
