@@ -100,7 +100,7 @@ The seeded database includes two accounts configured to demonstrate role-based a
 | **Enrolled Student**     | `student.enrolled@example.com` | `password123` | **Enrolled** in courses | Full access to lessons, voice dictation, AI tutor, and chat history.    |
 | **Unauthorized Student** | `student.noaccess@example.com` | `password123` | **Not Enrolled**        | Validation of access denial (anti-IDOR) and blocked lesson/chat access. |
 
-> **Quick User Switcher (`UserSwitcher`)**: The top navigation bar includes an instant profile switcher allowing reviewers to toggle between the authorized and unauthorized accounts without having to manually log out and log in.
+> **One-Click Auth Presets**: The authentication view includes instant preset cards allowing reviewers to log in as either account with a single click, without having to manually type credentials.
 
 ---
 
@@ -109,7 +109,7 @@ The seeded database includes two accounts configured to demonstrate role-based a
 Follow these steps to evaluate the end-to-end functionality of the POC:
 
 1. **Lesson Access & Curriculum**:
-   - Navigate to [http://localhost:5173](http://localhost:5173) using the **Enrolled Student** profile.
+   - Navigate to [http://localhost:5173](http://localhost:5173) using the **Enrolled Student** profile (`student.enrolled@example.com`).
    - Select the course _"Practical Everyday English & Pronunciation"_ and open the lesson _"Essential Travel English & Airport Navigation"_.
    - Review the structured Markdown content, dialogues, and pronunciation guidance.
 
@@ -131,14 +131,14 @@ Follow these steps to evaluate the end-to-end functionality of the POC:
      `"No tengo información en esta lección para responder a eso."`
 
 5. **Access Control & Anti-IDOR Verification**:
-   - In the navigation bar, click **"Cerrar sesión"** (or logout) to return to the authentication screen.
-   - Select the **Estudiante no matriculada** preset profile (`lucia.mendez@example.com`).
+   - In the navigation bar, click **"Cerrar sesión"** to return to the authentication screen.
+   - Select the **Unauthorized Student** preset profile (`student.noaccess@example.com`).
    - Attempt to navigate to the lesson URL or course view.
    - Verify that access is explicitly blocked with a **403 Forbidden** screen (`LessonAccessDenied`), preventing unauthorized inspection of both the lesson content and previous student chat exchanges.
-   - _(Note: If you click "Inscribirme en el curso", the application exercises self-enrollment; to reset Lucía to unenrolled status for repeated evaluation, run `pnpm run db:seed`)._
+   - _(Note: If you click "Inscribirme en el curso", the application exercises self-enrollment; to reset the user to unenrolled status for repeated evaluation, run `pnpm run db:seed`)._
 
 6. **Conversation Continuity & Persistence**:
-   - Log out and log back in using the **Estudiante matriculado** profile (`carlos.mendoza@example.com`).
+   - Log out and log back in using the **Enrolled Student** profile (`student.enrolled@example.com`).
    - Return to the lesson or refresh the browser page (`F5`).
    - Verify that all previous exchanges and suggestions are retrieved intact from the database.
 
