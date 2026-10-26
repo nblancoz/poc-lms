@@ -23,7 +23,7 @@ A functional Proof of Concept (POC) demonstrating an artificial intelligence-ass
 - **Frontend**: React 19, TypeScript, Vite, `react-markdown`, `rehype-raw`, `rehype-sanitize`, `remark-gfm`, `@heroicons/react`.
 - **Backend**: Node.js, Express, TypeScript, Prisma ORM, `@google/genai` (Official Google Gemini SDK), Zod, JWT, bcryptjs.
 - **Database**: PostgreSQL 16 (via Docker Compose) managed with Prisma.
-- **Code Quality**: ESLint 9 (Flat Config), Prettier, Strict TypeScript, Commitlint.
+- **Code Quality & Testing**: Jest, ESLint 9 (Flat Config), Prettier, Strict TypeScript, Commitlint.
 
 ---
 
@@ -187,8 +187,12 @@ pnpm run format
 # Verify code formatting with Prettier
 pnpm run format:check
 
+# Run automated integration and unit test suite
+pnpm run test
+
 # Build both backend and frontend bundles for production
 pnpm run build
+
 ```
 
 ---

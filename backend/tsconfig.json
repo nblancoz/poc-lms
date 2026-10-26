@@ -2,12 +2,11 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "module": "nodenext",
-    "types": ["node"],
-    "rootDir": "src",
-    "outDir": "dist",
-    "declaration": false,
+    "types": ["node", "jest"],
+    "noEmit": true,
     "verbatimModuleSyntax": false
   },
-  "include": ["src"],
+  "include": ["src/**/*", "test/**/*", "jest.config.ts"],
+  "files": ["src/types/express.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
